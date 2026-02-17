@@ -52,9 +52,9 @@
 ;; TODO ;;;;;;;;;;;;;;;
 
 ;; Rules for user interface
-;; Everything treated as a valid formula
-;; Any single character treated as a propositional
-;; Any word treated as a connective
+;; Individual characters treated as propositions
+;; Anything in list *CONNECTIVES* is a connective
+;; Expressions must be bracketed
 
 (defun split-expression (input)
   "Splits and expression on spaces and returns the split expression."
