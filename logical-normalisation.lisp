@@ -27,7 +27,10 @@
 			      "NOT"
 			      "IMPLIES"
 			      "IFF"))
-;; User interface
+
+;; User interface ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; USER INTERFACE ON HOLD
+;; Concentration on REPL logic now (2026-02-17)
 
 (defun main-interface ()
   "Gets user input of logical formula and returns upcased string of input."
@@ -105,13 +108,22 @@
       (if (proposition-p symbol) (push symbol propositions)))
     (reverse propositions)))
 
-(defun negate (p)
+
+(defun negate (p) ; rename and move as printing function 
   (format nil "NOT(~a)" p))
 
-;; Propositional Logic Functions
+;; Propositional Logic Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; DNF and CNF
-(defun pair-cnf (expression)
+;; DNF and CNF ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; WHOLE SECTION NEEDS MASSIVE REFACTOR
+;; It is not working and makes no sense
+;; New approach needs to be adopted
+;; Further research in Smith (2012) 'Logic' necessary
+;; Whole section temporarily deprecated and put under review as of
+;; 2026-02-17
+
+(defun pair-cnf (expression) ; this is not working and not good enough anyway, jumping ahead
   "Takes expression as string (only of form p connective p, e.g. 'A AND B') and produces CNF"
   (let ((table (truth-table *inputs* (identify-pair-expression expression)))
 	(propositions (extract-propositions expression))
@@ -129,7 +141,7 @@
     (format t "~&Conjunctive Normal Form:")
     (format t "~&~a" (conjunct-expression-list disjunctions))))
 
-(defun construct-disjunction (truth-table-row propositions)
+(defun construct-disjunction (truth-table-row propositions) ; needs testing, 2026-02-17 
   "Takes truth-table-row and returns disjunction for CNF"
   (let ((disjunction "OR")
 	(a (first propositions))
@@ -138,7 +150,7 @@
 	  ((= (second truth-table-row) 1) (setf b (negate b))))
     (format nil "~a ~a ~a" a disjunction b)))
 
-(defun construct-conjunction (truth-table-row propositions)
+(defun construct-conjunction (truth-table-row propositions) ; needs testing, 2026-02-17
   "Takes truth-table-row and constructs conjunction for DNF"
   (let ((conjunction "AND")
 	(a (first propositions))
@@ -147,7 +159,7 @@
 	  ((= (second truth-table-row 0) (setf b (negate b)))))
     (format nil "~a ~a ~a" a conjunction b)))
 
-(defun conjunct-expression-list (expression-list)
+(defun conjunct-expression-list (expression-list) ; needs testing, 2026-02-17
   "Takes list of expressions and joins them with ANDs, returns as string"
   (let ((conjunct-string ""))
     (iter (for expression in expression-list)
@@ -155,7 +167,7 @@
   (string-right-trim " AND" (string-left-trim " " conjunct-string))))
 
 
-(defun disjunct-expression-list (expression-list)
+(defun disjunct-expression-list (expression-list) ; needs testing, 2026-02-17
   "Takes list of expression and joins them with ORs returns as string"
   (let ((disjunct-string ""))
     (iter (for expression in expression-list)
@@ -164,7 +176,10 @@
 
 
     
-;; Connectives	
+;; Connectives ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Section works
+;; but not being put to right use.
+
 (defun truth-p (x)
   "Returns T if x == 1, which is considered truth, and NIL otherwise."
   (= x 1))
@@ -193,13 +208,11 @@
   (some #'truth-p propositions))
 
 
-;; Truth table calculators
-
-
-;; (defun generate-inputs (num-p)
-;;   (let ((table '())
-;; 	(p-counters (make-list num-p :initial-element 0)))
-;;     (while (member p-counters 0)
+;; Truth table calculators ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Needs rework, truth tables produced are incomplete
+;; and only accept pairs of inputs so far. For now this
+;; is ok but eventually will have to make them work with
+;; unlimited inputs.
 		         
 (defun not-truth-table (inputs)
   (let ((table '()))
@@ -246,8 +259,8 @@
 	((equal connective "IFF") (iff-truth-table inputs))
 	(t nil)))
 
-;; Boolean logic Functions
-;; for future expansion
+;; Boolean logic Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; for future expansion, working
 
 (defun tea-nand (propositions)
   "NAND connective, returns NIL if all inputs are 1, T otherwise."
