@@ -108,27 +108,6 @@
 (defun negate (p)
   (format nil "NOT(~a)" p))
 
-
-
-
-
-;; (defun pair-cnf (expression)
-;;   (let ((table (truth-table (identify-pair-expression expression)))
-;; 	(propositions (extract-propositions expression))
-;; 	(formatted-propositions '())
-;; 	(false-row-table '()))
-;;     ;; Build table of false truth-table rows
-;;     (iter (for row in table)
-;;       (if (equal (third row) nil)
-;; 	  (setf false-row-table (append (list (first row) (second row))))))
-;;     ;; Compreare false-truth-table rows to order of propositions and negate
-;;     ;; those propositions which take the value of 1 in that rows
-;;     (iter (for row in false-row-table)
-;; 	  (iter (for i from 1 to (length row))
-;; 		(if (= (nth i row) 1) (push (negate (nth i propositions)) formatted-propositions)
-;; 		(push (nth i propositions) formatted-propositions)))
-;;     formatted-propositions)) 
-
 ;; Propositional Logic Functions
 
 ;; DNF and CNF
@@ -274,9 +253,12 @@
   "NAND connective, returns NIL if all inputs are 1, T otherwise."
   (not (tea-and propositions)))
 
+(defun zero-p (x)
+  (= x 0))
+
 (defun tea-nor (propositions)
   "NOR connective, returns T if all inputs are 0, NIL otherwise."
-  (not (tea-nand propositions)))
+  (every #'zero-p propositions))
 
 (defun is-odd-p (x)
   "Returns T if x is odd"
